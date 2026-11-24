@@ -116,14 +116,26 @@ router.get("/", async (req, res) => {
             filter.price = { ...filter.price, $lte: Number(req.query.maxPrice) };
         }
 
-        //6.5 Retrieve products matching the filter
-        const products = await Product.find(filter);
+        // 6.5 Set the sorting order if provided
+        const sortOption = {};
 
-        // 6.6 Return the products
+        if (req.query.sortBy === "price_asc") {
+            sortOption.price = 1;
+        } else if (req.query.sortBy === "price_desc") {
+            sortOption.price = -1;
+        }
+
+        // //6.6 Retrieve products matching the filter
+        // const products = await Product.find(filter);
+
+        // 6.6 Retrieve products matching the filter and sort the results
+        const products = await Product.find(filter).sort(sortOption);
+
+        // 6.7 Return the products
         return res.status(200).json(products);
 
     } catch (error) {
-        // 6.7 Handle errors during product retrieval
+        // 6.8 Handle errors during product retrieval
         res.status(400).json({ message: error.message });
     }
 });
