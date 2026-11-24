@@ -97,7 +97,7 @@ router.delete("/:id", async (req, res) => {
 // 6. GET /api/products (Retrieve All Products)
 router.get("/", async (req, res) => {
     try {
-       
+
         // 6.1 Create an empty filter object
         const filter = {};
 
@@ -111,14 +111,19 @@ router.get("/", async (req, res) => {
             filter.price = { ...filter.price, $gte: Number(req.query.minPrice) };
         }
 
-        //6.4 Retrieve products matching the filter
+        // 6.4 Add maximum price to the filter if provided
+        if (req.query.maxPrice) {
+            filter.price = { ...filter.price, $lte: Number(req.query.maxPrice) };
+        }
+
+        //6.5 Retrieve products matching the filter
         const products = await Product.find(filter);
 
-        // 6.5 Return the products
+        // 6.6 Return the products
         return res.status(200).json(products);
 
     } catch (error) {
-        // 6.5 Handle errors during product retrieval
+        // 6.7 Handle errors during product retrieval
         res.status(400).json({ message: error.message });
     }
 });
