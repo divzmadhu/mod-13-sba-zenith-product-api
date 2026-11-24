@@ -97,10 +97,7 @@ router.delete("/:id", async (req, res) => {
 // 6. GET /api/products (Retrieve All Products)
 router.get("/", async (req, res) => {
     try {
-
-        // 6.1 Retrieve all products from MongoDB
-        // const products = await Product.find({});
-
+       
         // 6.1 Create an empty filter object
         const filter = {};
 
@@ -109,11 +106,15 @@ router.get("/", async (req, res) => {
             filter.category = req.query.category;
         }
 
-        //6.3  Add filtering conditions here
+        // 6.3 Add minimum price to the filter if provided
+        if (req.query.minPrice) {
+            filter.price = { ...filter.price, $gte: Number(req.query.minPrice) };
+        }
+
+        //6.4 Retrieve products matching the filter
         const products = await Product.find(filter);
 
-
-        // 6.4 Return the products
+        // 6.5 Return the products
         return res.status(200).json(products);
 
     } catch (error) {
