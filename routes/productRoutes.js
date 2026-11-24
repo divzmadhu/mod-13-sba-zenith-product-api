@@ -50,7 +50,7 @@ router.put("/:id", async (req, res) => {
         // 4.1 Find the product by ID and update it with the request body
         const updatedProduct = await Product.findByIdAndUpdate(
             req.params.id,
-            req.body,           
+            req.body,
             { returnDocument: "after", runValidators: true }
         );
         // 4.2 Check whether the product exists
@@ -64,34 +64,51 @@ router.put("/:id", async (req, res) => {
 
     } catch (error) {
 
-         // 4.4 Handle errors during product update
+        // 4.4 Handle errors during product update
         res.status(400).json({ message: error.message });
     }
 })
 
 // 5. DELETE /api/products/:id (Delete a Product)
 
-router.delete("/:id", async(req,res)=>{
-    try{
+router.delete("/:id", async (req, res) => {
+    try {
 
-         // 5.1 Find the product by ID and delete it
+        // 5.1 Find the product by ID and delete it
         const deletedProduct = await Product.findByIdAndDelete(req.params.id);
 
         // 5.2 Check whether the product exists
-        if(!deletedProduct){
-            return res.status(404).json({message:"Product NOT found!"});
+        if (!deletedProduct) {
+            return res.status(404).json({ message: "Product NOT found!" });
         }
 
         // 5.3 Send a success message
-        return res.status(200).json({message :`${deletedProduct.name} deleted successfully`});
+        return res.status(200).json({ message: `${deletedProduct.name} deleted successfully` });
 
-    }catch(error){
+    } catch (error) {
 
-         // 5.4 Handle errors during product deletion
-        res.status(400).json({message: error.message});
+        // 5.4 Handle errors during product deletion
+        res.status(400).json({ message: error.message });
     }
 
 })
+
+
+// 6. GET /api/products (Retrieve All Products)
+router.get("/", async (req, res) => {
+    try {
+
+        // 6.1 Retrieve all products from MongoDB
+        const products = await Product.find({});
+
+        // 6.2 Return the products
+        return res.status(200).json(products);
+
+    } catch (error) {
+        // 6.3 Handle errors during product retrieval
+        res.status(400).json({ message: error.message });
+    }
+});
 
 //1.4 Export the router to use it in the main server file
 export default router;
