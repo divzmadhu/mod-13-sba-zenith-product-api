@@ -8,7 +8,7 @@ import Product from "../models/Product.js";
 const router = express.Router();
 
 
-// 2. POST :- Create a new product 
+// 2. POST /api/products (Create a Product)
 router.post("/", async (req, res) => {
     try {
         // 2.1 Create a product using the data received in the request body
@@ -67,6 +67,30 @@ router.put("/:id", async (req, res) => {
          // 4.4 Handle errors during product update
         res.status(400).json({ message: error.message });
     }
+})
+
+// 5. DELETE /api/products/:id (Delete a Product)
+
+router.delete("/:id", async(req,res)=>{
+    try{
+
+         // 5.1 Find the product by ID and delete it
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+
+        // 5.2 Check whether the product exists
+        if(!deletedProduct){
+            return res.status(404).json({message:"Product NOT found!"});
+        }
+
+        // 5.3 Send a success message
+        return res.status(200).json({message :`${deletedProduct.name} deleted successfully`});
+
+    }catch(error){
+
+         // 5.4 Handle errors during product deletion
+        res.status(400).json({message: error.message});
+    }
+
 })
 
 //1.4 Export the router to use it in the main server file
