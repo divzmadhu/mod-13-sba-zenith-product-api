@@ -325,7 +325,7 @@ By testing successful requests as well as scenarios such as invalid product data
 
 This helped me understand how the API communicates the outcome of a request to the client.
 
-## 14. Future Improvements
+## 12. Future Improvements
 
 Although the required functionality has been implemented, there are a few enhancements that could be explored in the future:
 
