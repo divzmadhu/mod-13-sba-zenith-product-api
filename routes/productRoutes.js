@@ -125,17 +125,24 @@ router.get("/", async (req, res) => {
             sortOption.price = -1;
         }
 
-        // //6.6 Retrieve products matching the filter
-        // const products = await Product.find(filter);
+        // 6.6 Get pagination values from query parameters
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
 
-        // 6.6 Retrieve products matching the filter and sort the results
-        const products = await Product.find(filter).sort(sortOption);
+        // 6.7 Calculate the number of products to skip
+        const skip = (page - 1) * limit;
 
-        // 6.7 Return the products
+        // 6.8 Retrieve filtered, sorted, and paginated products
+        const products = await Product.find(filter)
+            .sort(sortOption)
+            .skip(skip)
+            .limit(limit);
+
+        // 6.9 Return the products
         return res.status(200).json(products);
 
     } catch (error) {
-        // 6.8 Handle errors during product retrieval
+        // 6.10 Handle errors during product retrieval
         res.status(400).json({ message: error.message });
     }
 });
