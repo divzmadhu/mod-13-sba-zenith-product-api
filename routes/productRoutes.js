@@ -99,13 +99,25 @@ router.get("/", async (req, res) => {
     try {
 
         // 6.1 Retrieve all products from MongoDB
-        const products = await Product.find({});
+        // const products = await Product.find({});
 
-        // 6.2 Return the products
+        // 6.1 Create an empty filter object
+        const filter = {};
+
+        // 6.2 Add category to the filter if provided
+        if (req.query.category) {
+            filter.category = req.query.category;
+        }
+
+        //6.3  Add filtering conditions here
+        const products = await Product.find(filter);
+
+
+        // 6.4 Return the products
         return res.status(200).json(products);
 
     } catch (error) {
-        // 6.3 Handle errors during product retrieval
+        // 6.5 Handle errors during product retrieval
         res.status(400).json({ message: error.message });
     }
 });
